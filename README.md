@@ -1,30 +1,13 @@
-# PR Migration Template
+# PR Migration Examples
 
-## Original PR Information
+This repository contains documentation for various PR migrations. Each example is detailed in its own markdown file.
 
-**URL:** [Insert PR URL here]
+## Examples
 
-**JIRA:** [Insert JIRA ticket number and description]
+1. [Example 1: SNOW-1492382](./example1-SNOW-1492382.md)
+2. [Example 2: SNOW-XXXXXX](./example2-SNOW-XXXXXX.md)
+3. [Example 3: SNOW-YYYYYY](./example3-SNOW-YYYYYY.md)
 
-## Migration Details
+## Template
 
-### Original Files
-- **SFTest File:** [Insert path to original SFTest file]
-- **SFTest Ref File:** [Insert path to original SFTest Ref file]
-
-### Changelog
-- [List major changes here]
-- [e.g., Migrated X to Y]
-- [e.g., Changed A to B]
-
-## Additional Details
-[Add any additional details, explanations, or context here]
-
-## LLM Generated Files
-- [File 1]
-- [File 2]
-- [File 3]
-- ...
-
-## Notes
-[Add any additional notes, concerns, or follow-up items here]
+For consistency, please use the [template](./template.md) when adding new examples.
