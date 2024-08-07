@@ -10,6 +10,7 @@
 
 ### Original Files
 * **SFTest File:** [t_native_apps_provider_platform_trust/src/application_package_security_review_dropping.py](https://github.com/snowflakedb/snowflake/blob/219948a7c9b65283a323139cea89a3cabdf5b259/RegressionTests/regressions/t_native_apps_provider_platform_trust/src/application_package_security_review_dropping.py)
+
 * **SFTest Ref File:** 
 [t_native_apps_provider_platform_trust/ref/application_package_security_review_dropping.py.ref](https://github.com/snowflakedb/snowflake/blob/6bf9883fd94688c462c87997b3129caaf2e5578b/RegressionTests/regressions/t_native_apps_provider_platform_trust/ref/application_package_security_review_dropping.py.ref)
 
