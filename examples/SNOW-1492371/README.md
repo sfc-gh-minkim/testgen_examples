@@ -5,6 +5,7 @@
 **URL:** https://github.com/snowflakedb/snowflake/pull/190531/
 
 **JIRA:** SNOW-1492371 
+
 Migrated `application_package_security_review_max.py` to Snowfort.
 
 ## Migration Details
