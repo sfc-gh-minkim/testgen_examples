@@ -66,4 +66,7 @@ We also manually add `RegressionTests/regressions/t_native_apps_provider_platfor
 [GOLD_test_application_package_security_review_max.py](https://github.com/sfc-gh-minkim/testgen_examples/blob/main/examples/SNOW-1492371/data/outputs/GOLD_test_application_package_security_review_max.py)
 
 ## Notes
-[Add any additional notes, concerns, or follow-up items here]
+
+### Examining the trajectory
+
+- To examine the full trajectory of SWEAgent, open [the output log](https://github.com/sfc-gh-minkim/testgen_examples/blob/main/examples/SNOW-1492371/output8.log) and search for `total_tokens_sent`, which are markers of when the LLM API calls are made.
