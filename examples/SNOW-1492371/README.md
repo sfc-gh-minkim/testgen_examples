@@ -26,8 +26,25 @@ Migrated `application_package_security_review_max.py` to Snowfort.
 ### Model/LLM
 We use a modified SWEAgent using gpt4o to generate the test. In the current version we copy the Snowflake repo into the docker in which SWEAgent can freely interact with the terminal. However it's unable to execute the actual tests at the moment.
 
+Besides standard SWEAgent prompts, we use the following task instruction:
+```
+JIRA: SNOW-1492371
+Migrate application_package_security_review_max.py to Snowfort.
+
+Here are the original SFTest Files:
+
+RegressionTests/regressions/t_native_apps_provider_platform_trust/src/application_package_security_review_max.py.
+Original SFTest Ref File:
+
+t_native_apps_provider_platform_trust/ref/application_package_security_review_max.py.ref
+
+Migrate them to Snowfort.
+```
+
 ### State of repo
-Sinc we couldn't find the repo state before the PR, we used the up-to-date main branch for now, but manually reset the `application_package_security_review_max.py` file by emptying out its contents.
+Since we couldn't find the repo state before the PR, we used the up-to-date main branch for now, but manually reset the `application_package_security_review_max.py` file by emptying out its contents.
+
+We also manually add `RegressionTests/regressions/t_native_apps_provider_platform_trust/src/application_package_security_review_max.py`.
 
 ### LLM Inputs
 - We provide a direct hint in the agent prompt:
