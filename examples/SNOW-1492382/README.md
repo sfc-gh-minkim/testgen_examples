@@ -24,8 +24,8 @@ We use a modified SWEAgent to generate the test. In the current version we copy 
 
 
 ## LLM Generated Files
-- a
-- b
+- [GENERATED_test_application_package_security_review_max.py][data/outputs/GENERATED_test_application_package_security_review_max.py]
+- [GOLD_test_application_package_security_review_max.py][data/outputs/GOLD_test_application_package_security_review_max.py]
 - c
 - ...
 
