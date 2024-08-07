@@ -44,7 +44,7 @@ Migrate them to Snowfort.
 ### State of repo
 Since we couldn't find the repo state before the PR, we used the up-to-date main branch for now, but manually reset the `application_package_security_review_max.py` file by emptying out its contents.
 
-We also manually add `RegressionTests/regressions/t_native_apps_provider_platform_trust/src/application_package_security_review_max.py`.
+We also manually add `RegressionTests/regressions/t_native_apps_provider_platform_trust/src/application_package_security_review_max.py`, which is the original SFTest file.
 
 ### LLM Inputs
 - We provide a direct hint in the agent prompt:
