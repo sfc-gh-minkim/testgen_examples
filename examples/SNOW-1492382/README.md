@@ -24,10 +24,8 @@ We use a modified SWEAgent to generate the test. In the current version we copy 
 
 
 ## LLM Generated Files
-- [GENERATED_test_application_package_security_review_max.py][data/outputs/GENERATED_test_application_package_security_review_max.py]
-- [GOLD_test_application_package_security_review_max.py][data/outputs/GOLD_test_application_package_security_review_max.py]
-- c
-- ...
+- LLM Generated file: [GENERATED_test_application_package_security_review_max.py](https://github.com/sfc-gh-minkim/testgen_examples/blob/main/examples/SNOW-1492382/data/outputs/GENERATED_test_application_package_security_review_max.py)
+- Gold Generated file: [GOLD_test_application_package_security_review_max.py](https://github.com/sfc-gh-minkim/testgen_examples/blob/main/examples/SNOW-1492382/data/outputs/GOLD_test_application_package_security_review_max.py)
 
 ## Notes
 [Add any additional notes, concerns, or follow-up items here]
