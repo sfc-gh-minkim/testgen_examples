@@ -23,7 +23,11 @@ Migrated `application_package_security_review_max.py` to Snowfort.
 - Migrated `application_package_security_review_max.py` to Snowfort
 
 ## LLM Test generation Details
-We use a modified SWEAgent to generate the test. In the current version we copy the Snowflake repo into the docker in which SWEAgent can freely interact with the terminal. However it's unable to execute the actual tests at the moment.
+### Model/LLM
+We use a modified SWEAgent using gpt4o to generate the test. In the current version we copy the Snowflake repo into the docker in which SWEAgent can freely interact with the terminal. However it's unable to execute the actual tests at the moment.
+
+### State of repo
+Sinc we couldn't find the repo state before the PR, we used the up-to-date main branch for now, but manually reset the `application_package_security_review_max.py` file by emptying out its contents.
 
 ### LLM Inputs
 - We provide a direct hint in the agent prompt:
@@ -31,6 +35,9 @@ We use a modified SWEAgent to generate the test. In the current version we copy 
 2. To understand Snowfort syntax and framework, you can explore and study existing examples of written tests,
    for example : Snowfort/tests/native_apps/provider_platform/trust/test_application_package_security_review_dropping.py
 ```
+- This referenced file can be found at:
+[test_application_package_security_review_dropping.py](https://github.com/snowflakedb/snowflake/blob/46acb94d6d30568ccad78e1cce28ff0d2c6de2a8/Snowfort/tests/native_apps/provider_platform/trust/test_application_package_security_review_dropping.py)
+
 
 ## LLM Generated Files
 - LLM Generated file: 
