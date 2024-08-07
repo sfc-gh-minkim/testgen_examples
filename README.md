@@ -1,12 +1,12 @@
-# PR Migration Examples
+# LLLM Testgen Examples
 
 This repository contains documentation for various PR migrations. Each example is detailed in its own markdown file.
 
 ## Examples
 
-1. [Example 1: SNOW-1492382](./example1-SNOW-1492382.md)
-2. [Example 2: SNOW-XXXXXX](./example2-SNOW-XXXXXX.md)
-3. [Example 3: SNOW-YYYYYY](./example3-SNOW-YYYYYY.md)
+1. [Example 1: SNOW-1492382](./example-SNOW-1492382.md)
+2. [Example 2: SNOW-XXXXXX](./example-SNOW-XXXXXX.md)
+3. [Example 3: SNOW-YYYYYY](./example-SNOW-YYYYYY.md)
 
 ## Template
 
