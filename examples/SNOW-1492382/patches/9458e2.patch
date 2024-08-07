@@ -1,0 +1,168 @@
+
+diff --git a/Snowfort/tests/native_apps/provider_platform/trust/test_application_package_security_review_max.py b/Snowfort/tests/native_apps/provider_platform/trust/test_application_package_security_review_max.py
+index 6eed3d1966ef..ce06c3c2f123 100644
+--- a/Snowfort/tests/native_apps/provider_platform/trust/test_application_package_security_review_max.py
++++ b/Snowfort/tests/native_apps/provider_platform/trust/test_application_package_security_review_max.py
+@@ -1,112 +1,70 @@
+ import pytest
+-
+ from snowfort.testlib.annotations.features import FeatureArea
++from snowfort.testlib.annotations.isolation import SFIsolationLevel
+ from snowfort.testlib.annotations.runtime import Runtime
+ from snowfort.testlib.annotations.sut import SUT
+ from snowfort.testlib.base_test import BaseTest
+-from snowfort.testlib.native_apps.annotations.accounts import NativeAppsProviderAccount
++from snowfort.testlib.native_apps.annotations.accounts import NativeAppsMultipleAccounts, NativeAppsProviderAccount
+ from snowfort.testlib.native_apps.api.application_package_api import ApplicationPackageProperty
+ from snowfort.testlib.native_apps.api.native_apps_api import NativeAppsApi
+ from snowfort.testlib.native_apps.api.native_apps_sql import NativeAppsSql
++from snowfort.testlib.native_apps.api.stage_api import StageEncryption
++from snowfort.testlib.native_apps.constants.database_flag import DatabaseFlag
+ from snowfort.testlib.native_apps.constants.distribution import Distribution
+ from snowfort.testlib.native_apps.constants.parameters import Parameter
+ from snowfort.testlib.native_apps.fixtures.security_scanner import SecurityScanner
++from snowfort.testlib.native_apps.models.application import Application
+ from snowfort.testlib.native_apps.models.application_package import ApplicationPackage
+-from snowfort.testlib.native_apps.models.application_package_security_review import (
+-    ReviewState,
+-)
+-
++from snowfort.testlib.native_apps.models.application_package_security_review import ReviewState
++from snowfort.testlib.native_apps.templates.setup_script import SetupScript
+ 
++@SecurityScanner
+ @FeatureArea.native_apps
+-@SUT.localall
++@SUT.local_fs
+ @Runtime.precommit
+-# default account parameters for security scans
+-@NativeAppsProviderAccount.with_args(
+-    parameters={
+-        Parameter.ENABLE_NATIVE_APPLICATION_TRUST_INTEGRATION: True,
+-        Parameter.ENABLE_APPLICATION_PACKAGE_VERSION_AUTOMATED_SECURITY_REVIEW: True,
+-        Parameter.ENABLE_APPLICATION_PACKAGE_VERSION_TRUST_ENFORCEMENT: True,
+-        Parameter.DISABLE_NATIVE_APPS_VERSION_OR_PATCH_CREATION_WITHOUT_PROVIDER_TERMS_ACCEPTANCE_WITH_EXTERNAL_DISTRIBUTION: False,
+-        Parameter.DISABLE_NATIVE_APPS_EXTERNAL_DISTRIBUTION_WITHOUT_PROVIDER_TERMS_ACCEPTANCE: False,
+-        Parameter.MAX_SECURITY_REVIEWS_PER_PACKAGE_VERSION_TOGGLING_EXTERNAL: 3,
+-    },
++@NativeAppsMultipleAccounts.with_args(
++    provider=NativeAppsMultipleAccounts.CreationSettings(
++        {
++            Parameter.ENABLE_NATIVE_APPS_BG_VERSION_DROPPER: True,
++            Parameter.DISABLE_NATIVE_APPS_BG_UPGRADE_FOR_TEST: True,
++            Parameter.ENABLE_NATIVE_APPLICATION_TRUST_INTEGRATION: True,
++            Parameter.ENABLE_APPLICATION_PACKAGE_VERSION_AUTOMATED_SECURITY_REVIEW: True,
++            Parameter.ENABLE_APPLICATION_PACKAGE_VERSION_TRUST_ENFORCEMENT: True,
++        }
++    ),
++    scanner=NativeAppsMultipleAccounts.CreationSettings(
++        parameters={Parameter.ENABLE_SECURITY_REVIEW_SYSTEM_FUNCS: True},
++    ),
+ )
+-@SecurityScanner
+ class TestApplicationPackageSecurityReviewMax(BaseTest):
+-    """Migrated from SFTest `application_package_security_review_max.py`."""
+-
+-    @pytest.fixture(scope="function")
+-    def _app_package(self, api: NativeAppsApi):
+-        app_package = api.application_package.create(
+-            props={ApplicationPackageProperty.DISTRIBUTION: Distribution.INTERNAL}
+-        )
+-        api.application_package.add_version(app_package)
+-        for i in range(10):
+-            api.application_package.add_patch(app_package)
+-        return app_package
+-
+-    def test_application_package_security_review_max(
+-        self, api: NativeAppsApi, sql: NativeAppsSql, _app_package: ApplicationPackage
+-    ):
+-        sql.test(f"SHOW VERSIONS IN APPLICATION PACKAGE {_app_package}").compare_with_ref(
+-            column_names=["state", "review_status"], maintain_order=True
+-        )
+-        api.application_package.set_default_release_directive(_app_package, patch=3)
+-        api.application_package.alter_set(
+-            _app_package, {ApplicationPackageProperty.DISTRIBUTION: Distribution.EXTERNAL}
+-        )
+-        sql.test(f"SHOW VERSIONS IN APPLICATION PACKAGE {_app_package}").compare_with_ref(
+-            column_names=["state", "review_status"], maintain_order=True
+-        )
+-
+-        account_id = api.account.get_id()
+-        package_id = api.dpo.get_entity_id(_app_package)
+-
+-        for i in range(8, 11):
+-            assert (
+-                api.application_package_security_review.wait_for_requester_review_state(
+-                    _app_package, ReviewState.PENDING_SCAN, patch_id=i
+-                ).state
+-                == ReviewState.PENDING_SCAN
+-            )
+-            assert (
+-                api.application_package_security_review.wait_for_scanner_review_state(
+-                    _app_package, ReviewState.PENDING_SCAN, patch_id=i
+-                ).state
+-                == ReviewState.PENDING_SCAN
+-            )
++    """Migrated from application_package_security_review_max.py"""
++@pytest.fixture(scope="function")
++def _app_package(self, api: NativeAppsApi, sql: NativeAppsSql) -> ApplicationPackage:
++    api.procedure.call("SYSTEM$INTERNAL_NATIVE_APPS_BG_UPGRADE_CTRL", args=["sync"])
++    api.procedure.call("SYSTEM$CLEANUP_APPLICATION_SECURITY_REVIEWS_IN_REQUESTER", use_snowflake_connection=True)
++    api.listing.accept_provider_monetization_terms()
++    api.global_metadata.sync_full()
+ 
+-        assert (
+-            api.application_package_security_review.wait_for_requester_review_state(
+-                _app_package, ReviewState.PENDING_SCAN, patch_id=3
+-            ).state
+-            == ReviewState.PENDING_SCAN
+-        )
+-        assert (
+-            api.application_package_security_review.wait_for_scanner_review_state(
+-                _app_package, ReviewState.PENDING_SCAN, patch_id=3
+-            ).state
+-            == ReviewState.PENDING_SCAN
+-        )
++    stage = api.stage.create(encryption_type=StageEncryption.SNOWFLAKE_FULL)
++    api.stage.prepare_app_stage(stage)
+ 
+-        api.procedure.call(
+-            "SYSTEM$CREATE_APPLICATION_SECURITY_REVIEW_IN_REQUESTER",
+-            [account_id, package_id, _app_package.version, 6],
+-            use_snowflake_connection=True,
+-        )
+-        sql.test(f"SHOW VERSIONS IN APPLICATION PACKAGE {_app_package}").compare_with_ref(
+-            column_names=["state", "review_status"], maintain_order=True
+-        )
++    app_package = api.application_package.create()
++    api.application_package.add_version(app_package, stage=stage)
++    api.application_package.add_patch(app_package, stage=stage)
++    api.application_package.add_patch(app_package, stage=stage)
++    api.application_package.add_patch(app_package, stage=stage)
++    api.application_package.add_patch(app_package, stage=stage)
++    api.application_package.alter_set(app_package, {ApplicationPackageProperty.DISTRIBUTION: Distribution.EXTERNAL})
++    api.global_metadata.sync_full()
++    return app_package
++def test_security_review(self, api: NativeAppsApi, _app_package: ApplicationPackage):
++    app = api.application.create(app_package=_app_package)
++    api.application_package.set_security_review_state(
++        app_package=_app_package, expected_state=ReviewState.PASSED
++    )
++    api.application_package.assert_latest_patch_security_review_state(
++        app_package=_app_package, expected_state=ReviewState.PASSED
++    )
++    api.global_metadata.sync_full()
++    assert app.security_review_state == ReviewState.PASSED
+ 
+-        assert (
+-            api.application_package_security_review.wait_for_requester_review_state(
+-                _app_package, ReviewState.PENDING_SCAN, patch_id=6
+-            ).state
+-            == ReviewState.PENDING_SCAN
+-        )
+-        assert (
+-            api.application_package_security_review.wait_for_scanner_review_state(
+-                _app_package, ReviewState.PENDING_SCAN, patch_id=6
+-            ).state
+-            == ReviewState.PENDING_SCAN
+-        )
