@@ -70,3 +70,4 @@ We also manually add `RegressionTests/regressions/t_native_apps_provider_platfor
 ### Examining the trajectory
 
 - To examine the full trajectory of SWEAgent, open [the output log](https://github.com/sfc-gh-minkim/testgen_examples/blob/main/examples/SNOW-1492371/output8.log) and search for `total_tokens_sent`, which are markers of when the LLM API calls are made.
+- Below each , you can find `THOUGHT`, `ACTION`, which are generated together by the LLM, and `MODEL INPUT` which is the environment observation after taking that action.
